@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRAGA — Research Progress</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>PRAGA</h1>
+    <p class="subtitle">research progress tracker</p>
+    <div class="pixel-buddy" title="click me!">
+      <div class="body"></div>
+    </div>
+  </header>
+
+  <!-- Charts -->
+  <section class="charts">
+    <div class="card">
+      <h2>Brier Score</h2>
+      <canvas id="brierChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>PnL</h2>
+      <canvas id="pnlChart"></canvas>
+      <div class="no-data-overlay" id="pnlOverlay">no data yet ✿</div>
+    </div>
+  </section>
+
+  <!-- Log Table -->
+  <section class="table-section">
+    <h2>Progress Log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Brier</th>
+            <th>PnL</th>
+            <th>What We Did</th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    made with care <span class="tilde" title="">~</span>
+  </footer>
+
+  <!-- Chart.js + date adapter (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+
+  <!-- App scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/easter-eggs.js"></script>
+</body>
+</html>
