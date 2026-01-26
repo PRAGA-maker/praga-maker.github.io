@@ -1,43 +1,129 @@
 // ============================================================
-//  Easter Eggs — pixel buddy, sparkles, card tilt, tilde mood
+//  Easter Eggs — donut ring, sparkles, card tilt, title wobble
 // ============================================================
 
 (function () {
   "use strict";
 
-  // ---------- 1. Pixel Buddy (squishy press) ----------
-  const kaomoji = ["(◕‿◕)", "(ノ◕ヮ◕)ノ*:・゚✧", "(╯°□°)╯︵ ┻━┻", "(づ｡◕‿‿◕｡)づ", "ʕ•ᴥ•ʔ", "( ˘▽˘)っ♨", "(⌐■_■)"];
-  const buddy = document.querySelector(".pixel-buddy");
+  // ---------- 1. 3D Donut Ring ----------
+  var kaomoji = ["(◕‿◕)", "(ノ◕ヮ◕)ノ*:・゚✧", "(╯°□°)╯︵ ┻━┻", "(づ｡◕‿‿◕｡)づ", "ʕ•ᴥ•ʔ", "( ˘▽˘)っ♨", "(⌐■_■)"];
 
-  if (buddy) {
-    // squish down on press, spring back on release
-    buddy.addEventListener("mousedown", function () {
-      buddy.classList.add("squish");
+  var scene = document.querySelector(".donut-scene");
+  var ring = document.querySelector(".donut-ring");
+  var clickLabel = document.querySelector(".click-me-label");
+
+  if (scene && ring) {
+    var angleY = 0;
+    var angleX = 0;
+    var baseSpeed = 0.3;
+    var currentSpeed = baseSpeed;
+    var squishX = 1;
+    var squishY = 1;
+    var isSquishing = false;
+    var targetTiltX = 0;
+    var targetTiltY = 0;
+    var isTouchDevice = "ontouchstart" in window;
+
+    function animate() {
+      if (!isTouchDevice) {
+        // Desktop: proximity-based speed and tilt are set via mousemove
+        angleX += (targetTiltX - angleX) * 0.08;
+      } else {
+        // Mobile: constant auto-rotate, no tilt
+        angleX = 0;
+      }
+
+      angleY += currentSpeed;
+
+      // Squish spring-back
+      if (!isSquishing) {
+        squishX += (1 - squishX) * 0.15;
+        squishY += (1 - squishY) * 0.15;
+      }
+
+      ring.style.transform =
+        "rotateX(" + angleX + "deg) " +
+        "rotateY(" + angleY + "deg) " +
+        "scaleX(" + squishX + ") " +
+        "scaleY(" + squishY + ")";
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    if (!isTouchDevice) {
+      // Desktop: mouse proximity
+      document.addEventListener("mousemove", function (e) {
+        var rect = scene.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var dx = e.clientX - cx;
+        var dy = e.clientY - cy;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 250) {
+          // Ramp speed: closer = faster, up to 4x
+          var t = 1 - dist / 250;
+          currentSpeed = baseSpeed + t * baseSpeed * 3;
+          // Tilt toward cursor
+          targetTiltX = (dy / 250) * -15;
+          targetTiltY += ((dx / 250) * 15 - targetTiltY) * 0.08;
+        } else {
+          currentSpeed = baseSpeed;
+          targetTiltX = 0;
+          targetTiltY = 0;
+        }
+
+        // Show "Click Me!" when close
+        if (clickLabel) {
+          clickLabel.style.opacity = dist < 100 ? "1" : "0";
+        }
+      });
+
+      // Desktop: squish on mousedown
+      scene.addEventListener("mousedown", function () {
+        isSquishing = true;
+        squishX = 1.3;
+        squishY = 0.6;
+      });
+
+      document.addEventListener("mouseup", function () {
+        isSquishing = false;
+      });
+    } else {
+      // Mobile: tap to squish
+      scene.addEventListener("touchstart", function (e) {
+        e.preventDefault();
+        isSquishing = true;
+        squishX = 1.3;
+        squishY = 0.6;
+      });
+
+      scene.addEventListener("touchend", function () {
+        isSquishing = false;
+        // Spawn kaomoji on tap
+        spawnKaomoji();
+      });
+    }
+
+    // Click: spawn kaomoji
+    scene.addEventListener("click", function () {
+      spawnKaomoji();
     });
 
-    buddy.addEventListener("mouseup", function () {
-      buddy.classList.remove("squish");
-      buddy.classList.remove("spring");
-      void buddy.offsetWidth;
-      buddy.classList.add("spring");
-    });
-
-    buddy.addEventListener("mouseleave", function () {
-      buddy.classList.remove("squish");
-    });
-
-    buddy.addEventListener("click", function () {
+    function spawnKaomoji() {
       var reaction = document.createElement("span");
       reaction.className = "buddy-reaction";
       reaction.textContent = kaomoji[Math.floor(Math.random() * kaomoji.length)];
-      buddy.appendChild(reaction);
+      scene.appendChild(reaction);
       setTimeout(function () { reaction.remove(); }, 1300);
-    });
+    }
   }
 
   // ---------- 2. Click Sparkles ----------
   document.addEventListener("click", function (e) {
-    if (e.target.closest("a, button, canvas, .pixel-buddy, .tilde, table")) return;
+    if (e.target.closest("a, button, canvas, .donut-scene, table")) return;
 
     for (var i = 0; i < 6; i++) {
       var s = document.createElement("div");
@@ -59,9 +145,9 @@
   cards.forEach(function (card) {
     card.addEventListener("mousemove", function (e) {
       var rect = card.getBoundingClientRect();
-      var x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 → 0.5
+      var x = (e.clientX - rect.left) / rect.width  - 0.5;
       var y = (e.clientY - rect.top)  / rect.height - 0.5;
-      var tiltX = y * -8;  // degrees
+      var tiltX = y * -8;
       var tiltY = x *  8;
       card.style.transform = "perspective(600px) rotateX(" + tiltX + "deg) rotateY(" + tiltY + "deg) translateY(-2px)";
     });
@@ -74,7 +160,6 @@
   // ---------- 4. Title Wobble on Hover ----------
   var title = document.querySelector(".header h1");
   if (title) {
-    // wrap each letter in a span for individual animation
     var text = title.textContent;
     title.textContent = "";
     for (var i = 0; i < text.length; i++) {
@@ -92,18 +177,6 @@
         void l.offsetWidth;
         l.classList.add("wobbling");
       });
-    });
-  }
-
-  // ---------- 5. Footer Tilde — Mood Colors ----------
-  var moods = ["#FFF8F0", "#F0F4FF", "#F4FFF0", "#FFF0F8", "#F0FFFA", "#FFF5E6"];
-  var moodIdx = 0;
-  var tilde = document.querySelector(".tilde");
-
-  if (tilde) {
-    tilde.addEventListener("click", function () {
-      moodIdx = (moodIdx + 1) % moods.length;
-      document.body.style.background = moods[moodIdx];
     });
   }
 })();

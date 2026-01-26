@@ -1,4 +1,4 @@
-# praga-maker.github.io
+# Donuts
 tracking progress on one of my research projects
 
 keep the UI calm, clean, with care full of little interactibles + cool things if you can find em like search online for cool lil pixel art interactibles, cool ideas dedicate substantial study + implementation time for this
