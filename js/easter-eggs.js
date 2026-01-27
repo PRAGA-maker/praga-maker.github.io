@@ -17,35 +17,51 @@
     var angleX = 0;
     var baseSpeed = 0.3;
     var currentSpeed = baseSpeed;
-    var squishX = 1;
-    var squishY = 1;
-    var isSquishing = false;
+    var targetSpeed = baseSpeed;
     var targetTiltX = 0;
     var targetTiltY = 0;
     var isTouchDevice = "ontouchstart" in window;
 
+    // Cursor-speed tracking
+    var prevMouseX = null;
+    var prevTime = null;
+    var lastDirection = 1;
+    var mouseIdleTimer = null;
+
+    // Gaussian burst tracking
+    var burstStartTime = null;
+    var burstDirection = 1;
+
     function animate() {
+      var now = performance.now();
+
       if (!isTouchDevice) {
-        // Desktop: proximity-based speed and tilt are set via mousemove
+        // Smooth tilt toward cursor
         angleX += (targetTiltX - angleX) * 0.08;
       } else {
-        // Mobile: constant auto-rotate, no tilt
         angleX = 0;
       }
 
-      angleY += currentSpeed;
-
-      // Squish spring-back
-      if (!isSquishing) {
-        squishX += (1 - squishX) * 0.15;
-        squishY += (1 - squishY) * 0.15;
+      // Gaussian bell-curve click burst
+      if (burstStartTime !== null) {
+        var elapsed = (now - burstStartTime) / 1000;
+        if (elapsed > 1.5) {
+          burstStartTime = null;
+        } else {
+          var t = (elapsed - 0.75) / 0.25;
+          var boost = 20 * Math.exp(-(t * t));
+          currentSpeed += burstDirection * boost;
+        }
       }
+
+      // Smooth ease toward target speed
+      currentSpeed += (targetSpeed - currentSpeed) * 0.08;
+
+      angleY += currentSpeed;
 
       ring.style.transform =
         "rotateX(" + angleX + "deg) " +
-        "rotateY(" + angleY + "deg) " +
-        "scaleX(" + squishX + ") " +
-        "scaleY(" + squishY + ")";
+        "rotateY(" + angleY + "deg)";
 
       requestAnimationFrame(animate);
     }
@@ -53,8 +69,9 @@
     animate();
 
     if (!isTouchDevice) {
-      // Desktop: mouse proximity
+      // Desktop: cursor-speed-based exponential acceleration
       document.addEventListener("mousemove", function (e) {
+        var now = performance.now();
         var rect = scene.getBoundingClientRect();
         var cx = rect.left + rect.width / 2;
         var cy = rect.top + rect.height / 2;
@@ -62,55 +79,54 @@
         var dy = e.clientY - cy;
         var dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 250) {
-          // Ramp speed: closer = faster, up to 4x
-          var t = 1 - dist / 250;
-          currentSpeed = baseSpeed + t * baseSpeed * 3;
-          // Tilt toward cursor
-          targetTiltX = (dy / 250) * -15;
-          targetTiltY += ((dx / 250) * 15 - targetTiltY) * 0.08;
-        } else {
-          currentSpeed = baseSpeed;
-          targetTiltX = 0;
-          targetTiltY = 0;
+        if (prevMouseX !== null && prevTime !== null) {
+          var vx = e.clientX - prevMouseX;
+          var dt = Math.max(now - prevTime, 1); // clamp to avoid div-by-zero
+          var velocity = Math.abs(vx) / dt;
+          var direction = vx !== 0 ? Math.sign(vx) : lastDirection;
+
+          targetSpeed = direction * baseSpeed * Math.exp(0.02 * velocity);
+          // Cap at ±15 to prevent runaway
+          targetSpeed = Math.max(-15, Math.min(15, targetSpeed));
+
+          if (vx !== 0) lastDirection = direction;
         }
+
+        prevMouseX = e.clientX;
+        prevTime = now;
+
+        // Tilt toward cursor
+        targetTiltX = (dy / 250) * -15;
+        targetTiltY += ((dx / 250) * 15 - targetTiltY) * 0.08;
+
+        // Decay targetSpeed toward baseSpeed when mouse stops
+        clearTimeout(mouseIdleTimer);
+        mouseIdleTimer = setTimeout(function () {
+          targetSpeed = baseSpeed;
+        }, 150);
 
         // Show "Click Me!" when close
         if (clickLabel) {
-          clickLabel.style.opacity = dist < 100 ? "1" : "0";
+          clickLabel.style.opacity = dist < 150 ? "1" : "0";
         }
-      });
-
-      // Desktop: squish on mousedown
-      scene.addEventListener("mousedown", function () {
-        isSquishing = true;
-        squishX = 1.3;
-        squishY = 0.6;
-      });
-
-      document.addEventListener("mouseup", function () {
-        isSquishing = false;
-      });
-    } else {
-      // Mobile: tap to squish
-      scene.addEventListener("touchstart", function (e) {
-        e.preventDefault();
-        isSquishing = true;
-        squishX = 1.3;
-        squishY = 0.6;
-      });
-
-      scene.addEventListener("touchend", function () {
-        isSquishing = false;
-        // Spawn kaomoji on tap
-        spawnKaomoji();
       });
     }
 
-    // Click: spawn kaomoji
+    // Click: Gaussian burst + kaomoji
     scene.addEventListener("click", function () {
+      burstStartTime = performance.now();
+      burstDirection = Math.sign(currentSpeed) || 1;
       spawnKaomoji();
     });
+
+    // Mobile: tap spawns kaomoji
+    if (isTouchDevice) {
+      scene.addEventListener("touchend", function () {
+        burstStartTime = performance.now();
+        burstDirection = Math.sign(currentSpeed) || 1;
+        spawnKaomoji();
+      });
+    }
 
     function spawnKaomoji() {
       var reaction = document.createElement("span");

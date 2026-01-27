@@ -14,8 +14,8 @@ anyway in this the goal is just two big sidebyside XY graphs: one being:
 date vs. Brier score (y-scale log)
 
 current data:
-0.6, 2 weeks ago, random baseline
-0.2, 1 week ago,  barely working implementation
+0.25, 2 weeks ago, random baseline
+0.6, 1 week ago,  barely working implementation
 0.1, 5 days ago, RLM
 0.06, today , Agentic Ensemble
 

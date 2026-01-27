@@ -30,13 +30,25 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
 /* ===== Header ===== */
 .header {
   text-align: center;
-  padding: 2.5rem 1rem 1.5rem;
+  padding: 2rem 1rem 1.5rem;
   position: relative;
 }
 .header h1 {
   font-size: 2rem;
   color: var(--lavender);
   letter-spacing: 0.02em;
+}
+.lab-label {
+  color: var(--lavender);
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-top: 0.15rem;
+}
+.research-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 0.1rem;
 }
 .header .subtitle {
   color: var(--muted);
@@ -46,40 +58,51 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
 
 /* ===== 3D Donut Ring ===== */
 .donut-scene {
-  width: 200px;
-  height: 200px;
-  margin: 1.2rem auto 0;
-  perspective: 600px;
-  cursor: pointer;
   position: relative;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  perspective: 1000px;
+  cursor: pointer;
+  width: fit-content;
+}
+.header-text {
+  position: relative;
+  z-index: 1;
 }
 .donut-ring {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
   transform-style: preserve-3d;
 }
 .donut-face {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 80px;
+  height: 80px;
+  margin-left: -40px;
+  margin-top: -40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-family: 'Quicksand', sans-serif;
   font-weight: 700;
   color: var(--lavender);
   backface-visibility: hidden;
 }
-.donut-face[data-index="0"] { transform: rotateY(0deg)    translateZ(120px); font-size: 2.5rem; }
-.donut-face[data-index="1"] { transform: rotateY(45deg)   translateZ(120px); }
-.donut-face[data-index="2"] { transform: rotateY(90deg)   translateZ(120px); }
-.donut-face[data-index="3"] { transform: rotateY(135deg)  translateZ(120px); }
-.donut-face[data-index="4"] { transform: rotateY(180deg)  translateZ(120px); }
-.donut-face[data-index="5"] { transform: rotateY(225deg)  translateZ(120px); }
-.donut-face[data-index="6"] { transform: rotateY(270deg)  translateZ(120px); }
-.donut-face[data-index="7"] { transform: rotateY(315deg)  translateZ(120px); }
+.donut-face[data-index="0"]  { transform: rotateY(0deg)      translateZ(200px); font-size: 2.2rem; }
+.donut-face[data-index="1"]  { transform: rotateY(32.73deg)  translateZ(200px); }
+.donut-face[data-index="2"]  { transform: rotateY(65.45deg)  translateZ(200px); }
+.donut-face[data-index="3"]  { transform: rotateY(98.18deg)  translateZ(200px); }
+.donut-face[data-index="4"]  { transform: rotateY(130.91deg) translateZ(200px); }
+.donut-face[data-index="5"]  { transform: rotateY(163.64deg) translateZ(200px); }
+.donut-face[data-index="6"]  { transform: rotateY(196.36deg) translateZ(200px); }
+.donut-face[data-index="7"]  { transform: rotateY(229.09deg) translateZ(200px); }
+.donut-face[data-index="8"]  { transform: rotateY(261.82deg) translateZ(200px); font-size: 2rem; }
+.donut-face[data-index="9"]  { transform: rotateY(294.55deg) translateZ(200px); }
+.donut-face[data-index="10"] { transform: rotateY(327.27deg) translateZ(200px); }
 
 /* Pixel art donut via box-shadow */
 .pixel-donut {
@@ -132,10 +155,63 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
     calc(4*var(--u)) calc(5*var(--u)) 0 #8B4513;
 }
 
+/* Dot donut (face 9) — ring of dots */
+.dot-donut {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  border-radius: 50%;
+}
+.dot-donut::before,
+.dot-donut::after {
+  content: '';
+  position: absolute;
+}
+.dot-donut::before {
+  /* outer ring of dots */
+  width: 50px;
+  height: 50px;
+  top: 0; left: 0;
+  background:
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 25px 0px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 43px 7px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 50px 25px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 43px 43px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 25px 50px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 7px 43px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 0px 25px,
+    radial-gradient(circle, var(--lavender) 3px, transparent 3px) 7px 7px;
+  background-repeat: no-repeat;
+}
+.dot-donut::after {
+  /* inner ring of dots (hole) */
+  width: 50px;
+  height: 50px;
+  top: 0; left: 0;
+  background:
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 25px 12px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 34px 16px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 38px 25px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 34px 34px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 25px 38px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 16px 34px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 12px 25px,
+    radial-gradient(circle, var(--lavender) 2px, transparent 2px) 16px 16px;
+  background-repeat: no-repeat;
+}
+
+/* Negative donut (face 10) — donut as negative space */
+.negative-donut {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 30%, var(--lavender) 32%, var(--lavender) 60%, transparent 62%);
+}
+
 /* Click Me label */
 .click-me-label {
   position: absolute;
-  bottom: -30px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   color: var(--lavender);

@@ -2,6 +2,44 @@
 //  Charts + Table — reads from DATA (data.js)
 // ============================================================
 
+// --- Reciprocal scale: 1/y transform zooms in on low values ---
+class ReciprocalScale extends Chart.Scale {
+  static id = "reciprocal";
+  static defaults = {};
+
+  determineDataLimits() {
+    const { min, max } = this.getMinMax(true);
+    this.min = min * 0.7;
+    this.max = max * 1.3;
+  }
+
+  buildTicks() {
+    const nice = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0];
+    const ticks = nice
+      .filter((v) => v >= this.min && v <= this.max)
+      .map((v) => ({ value: v }));
+    return ticks;
+  }
+
+  getPixelForValue(value) {
+    if (value <= 0) value = this.min;
+    var fMin = 1 / this.max;
+    var fMax = 1 / this.min;
+    var f = 1 / value;
+    var decimal = (f - fMin) / (fMax - fMin);
+    return this.getPixelForDecimal(decimal);
+  }
+
+  getValueForPixel(pixel) {
+    var decimal = this.getDecimalForPixel(pixel);
+    var fMin = 1 / this.max;
+    var fMax = 1 / this.min;
+    var f = fMin + decimal * (fMax - fMin);
+    return 1 / f;
+  }
+}
+Chart.register(ReciprocalScale);
+
 (function () {
   "use strict";
 
@@ -46,11 +84,11 @@
             grid: { color: "rgba(0,0,0,0.04)" },
           },
           y: {
-            type: "logarithmic",
-            title: { display: true, text: "Brier Score (log)", font: { family: "Quicksand" } },
+            type: "reciprocal",
+            title: { display: true, text: "Brier Score", font: { family: "Quicksand" } },
             grid: { color: "rgba(0,0,0,0.04)" },
             ticks: {
-              callback: (v) => Number(v.toFixed(4)),
+              callback: (v) => Number(v.toFixed(2)),
             },
           },
         },
