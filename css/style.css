@@ -77,10 +77,10 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
 }
 .donut-face {
   position: absolute;
-  width: 96px;
-  height: 96px;
-  margin-left: -48px;
-  margin-top: -48px;
+  width: 156px;
+  height: 156px;
+  margin-left: -78px;
+  margin-top: -78px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,8 +89,8 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
 /* ===== Pixel-Art Donut Canvas ===== */
 .donut-canvas {
   display: block;
-  width: 84px;
-  height: 84px;
+  width: 144px;
+  height: 144px;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
