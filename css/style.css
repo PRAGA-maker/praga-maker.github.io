@@ -49,15 +49,15 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
   margin-top: 0.25rem;
 }
 
-/* ===== 3D Donut Ring ===== */
+/* ===== 2D Donut Ring ===== */
 .donut-scene {
   position: relative;
   margin: 0 auto;
-  padding: 2rem 1rem;
-  perspective: 1400px;
+  padding: 3rem 1rem;
   cursor: pointer;
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
+  min-height: 480px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,33 +73,20 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
   left: 50%;
   width: 0;
   height: 0;
-  transform-style: preserve-3d;
   z-index: 0;
 }
 .donut-face {
   position: absolute;
-  width: 80px;
-  height: 80px;
-  margin-left: -40px;
-  margin-top: -40px;
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 700;
-  color: var(--lavender);
-  backface-visibility: hidden;
 }
-.donut-face[data-index="0"]  { transform: rotateY(0deg)      translateZ(320px); font-size: 2.2rem; }
-.donut-face[data-index="1"]  { transform: rotateY(51.43deg)  translateZ(320px); }
-.donut-face[data-index="2"]  { transform: rotateY(102.86deg) translateZ(320px); }
-.donut-face[data-index="3"]  { transform: rotateY(154.29deg) translateZ(320px); }
-.donut-face[data-index="4"]  { transform: rotateY(205.71deg) translateZ(320px); }
-.donut-face[data-index="5"]  { transform: rotateY(257.14deg) translateZ(320px); font-size: 2rem; }
-.donut-face[data-index="6"]  { transform: rotateY(308.57deg) translateZ(320px); }
 
-/* Pixel art donut via box-shadow */
+/* ===== Pixel-Art Donut (9x9 grid, CSS custom-property colors) ===== */
 .pixel-donut {
   --u: 5px;
   width: var(--u);
@@ -107,71 +94,103 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
   background: transparent;
   image-rendering: pixelated;
   box-shadow:
-    /* outer ring — brown */
-    calc(2*var(--u)) 0               0 #8B4513,
-    calc(3*var(--u)) 0               0 #8B4513,
-    calc(4*var(--u)) 0               0 #8B4513,
-    calc(1*var(--u)) calc(1*var(--u)) 0 #8B4513,
-    calc(5*var(--u)) calc(1*var(--u)) 0 #8B4513,
-    0                calc(2*var(--u)) 0 #8B4513,
-    calc(6*var(--u)) calc(2*var(--u)) 0 #8B4513,
-    0                calc(3*var(--u)) 0 #8B4513,
-    calc(6*var(--u)) calc(3*var(--u)) 0 #8B4513,
-    0                calc(4*var(--u)) 0 #8B4513,
-    calc(6*var(--u)) calc(4*var(--u)) 0 #8B4513,
-    calc(1*var(--u)) calc(5*var(--u)) 0 #8B4513,
-    calc(5*var(--u)) calc(5*var(--u)) 0 #8B4513,
-    calc(2*var(--u)) calc(6*var(--u)) 0 #8B4513,
-    calc(3*var(--u)) calc(6*var(--u)) 0 #8B4513,
-    calc(4*var(--u)) calc(6*var(--u)) 0 #8B4513,
-    /* frosting — pink */
-    calc(2*var(--u)) calc(1*var(--u)) 0 #FFB6C1,
-    calc(3*var(--u)) calc(1*var(--u)) 0 #FFB6C1,
-    calc(4*var(--u)) calc(1*var(--u)) 0 #FFB6C1,
-    calc(1*var(--u)) calc(2*var(--u)) 0 #FFB6C1,
-    calc(5*var(--u)) calc(2*var(--u)) 0 #FFB6C1,
-    calc(1*var(--u)) calc(3*var(--u)) 0 #FFB6C1,
-    calc(5*var(--u)) calc(3*var(--u)) 0 #FFB6C1,
-    /* hole — background */
-    calc(2*var(--u)) calc(2*var(--u)) 0 var(--bg),
+    /* ring body — row 0 */
+    calc(2*var(--u)) 0               0 var(--c),
+    calc(3*var(--u)) 0               0 var(--c),
+    calc(4*var(--u)) 0               0 var(--c),
+    calc(5*var(--u)) 0               0 var(--c),
+    calc(6*var(--u)) 0               0 var(--c),
+    /* row 1 edges */
+    calc(1*var(--u)) calc(1*var(--u)) 0 var(--c),
+    calc(7*var(--u)) calc(1*var(--u)) 0 var(--c),
+    /* row 2 edges */
+    0                calc(2*var(--u)) 0 var(--c),
+    calc(8*var(--u)) calc(2*var(--u)) 0 var(--c),
+    /* row 3 edges */
+    0                calc(3*var(--u)) 0 var(--c),
+    calc(8*var(--u)) calc(3*var(--u)) 0 var(--c),
+    /* row 4 edges */
+    0                calc(4*var(--u)) 0 var(--c),
+    calc(8*var(--u)) calc(4*var(--u)) 0 var(--c),
+    /* row 5 */
+    0                calc(5*var(--u)) 0 var(--c),
+    calc(1*var(--u)) calc(5*var(--u)) 0 var(--c),
+    calc(7*var(--u)) calc(5*var(--u)) 0 var(--c),
+    calc(8*var(--u)) calc(5*var(--u)) 0 var(--c),
+    /* row 6 */
+    0                calc(6*var(--u)) 0 var(--c),
+    calc(1*var(--u)) calc(6*var(--u)) 0 var(--c),
+    calc(2*var(--u)) calc(6*var(--u)) 0 var(--c),
+    calc(6*var(--u)) calc(6*var(--u)) 0 var(--c),
+    calc(7*var(--u)) calc(6*var(--u)) 0 var(--c),
+    calc(8*var(--u)) calc(6*var(--u)) 0 var(--c),
+    /* row 7 */
+    calc(1*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(2*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(3*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(4*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(5*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(6*var(--u)) calc(7*var(--u)) 0 var(--c),
+    calc(7*var(--u)) calc(7*var(--u)) 0 var(--c),
+    /* row 8 */
+    calc(2*var(--u)) calc(8*var(--u)) 0 var(--c),
+    calc(3*var(--u)) calc(8*var(--u)) 0 var(--c),
+    calc(4*var(--u)) calc(8*var(--u)) 0 var(--c),
+    calc(5*var(--u)) calc(8*var(--u)) 0 var(--c),
+    calc(6*var(--u)) calc(8*var(--u)) 0 var(--c),
+    /* frosting — row 1 */
+    calc(2*var(--u)) calc(1*var(--u)) 0 var(--f),
+    calc(3*var(--u)) calc(1*var(--u)) 0 var(--f),
+    calc(4*var(--u)) calc(1*var(--u)) 0 var(--f),
+    calc(5*var(--u)) calc(1*var(--u)) 0 var(--f),
+    calc(6*var(--u)) calc(1*var(--u)) 0 var(--f),
+    /* frosting — row 2 */
+    calc(1*var(--u)) calc(2*var(--u)) 0 var(--f),
+    calc(2*var(--u)) calc(2*var(--u)) 0 var(--f),
+    calc(6*var(--u)) calc(2*var(--u)) 0 var(--f),
+    calc(7*var(--u)) calc(2*var(--u)) 0 var(--f),
+    /* frosting — row 3 */
+    calc(1*var(--u)) calc(3*var(--u)) 0 var(--f),
+    calc(7*var(--u)) calc(3*var(--u)) 0 var(--f),
+    /* frosting — row 4 */
+    calc(1*var(--u)) calc(4*var(--u)) 0 var(--f),
+    calc(7*var(--u)) calc(4*var(--u)) 0 var(--f),
+    /* hole — row 2 */
     calc(3*var(--u)) calc(2*var(--u)) 0 var(--bg),
     calc(4*var(--u)) calc(2*var(--u)) 0 var(--bg),
+    calc(5*var(--u)) calc(2*var(--u)) 0 var(--bg),
+    /* hole — row 3 */
     calc(2*var(--u)) calc(3*var(--u)) 0 var(--bg),
     calc(3*var(--u)) calc(3*var(--u)) 0 var(--bg),
     calc(4*var(--u)) calc(3*var(--u)) 0 var(--bg),
+    calc(5*var(--u)) calc(3*var(--u)) 0 var(--bg),
+    calc(6*var(--u)) calc(3*var(--u)) 0 var(--bg),
+    /* hole — row 4 */
     calc(2*var(--u)) calc(4*var(--u)) 0 var(--bg),
     calc(3*var(--u)) calc(4*var(--u)) 0 var(--bg),
     calc(4*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    /* lower body — brown */
-    calc(1*var(--u)) calc(4*var(--u)) 0 #8B4513,
-    calc(5*var(--u)) calc(4*var(--u)) 0 #8B4513,
-    calc(2*var(--u)) calc(5*var(--u)) 0 #8B4513,
-    calc(3*var(--u)) calc(5*var(--u)) 0 #8B4513,
-    calc(4*var(--u)) calc(5*var(--u)) 0 #8B4513;
+    calc(5*var(--u)) calc(4*var(--u)) 0 var(--bg),
+    calc(6*var(--u)) calc(4*var(--u)) 0 var(--bg),
+    /* hole — row 5 */
+    calc(2*var(--u)) calc(5*var(--u)) 0 var(--bg),
+    calc(3*var(--u)) calc(5*var(--u)) 0 var(--bg),
+    calc(4*var(--u)) calc(5*var(--u)) 0 var(--bg),
+    calc(5*var(--u)) calc(5*var(--u)) 0 var(--bg),
+    calc(6*var(--u)) calc(5*var(--u)) 0 var(--bg),
+    /* hole — row 6 */
+    calc(3*var(--u)) calc(6*var(--u)) 0 var(--bg),
+    calc(4*var(--u)) calc(6*var(--u)) 0 var(--bg),
+    calc(5*var(--u)) calc(6*var(--u)) 0 var(--bg);
 }
 
-/* ASCII art donut faces */
-.ascii-donut {
-  font-size: 0.55rem;
-  line-height: 1.1;
-  margin: 0;
-  font-family: monospace;
-  white-space: pre;
-}
-.ascii-choco .f { color: #8B4513; }
-.ascii-choco .b { color: #FFB6C1; }
-.ascii-cool .f  { color: var(--lavender); }
-.ascii-cool .b  { color: var(--teal); }
-.ascii-lite .f  { color: var(--coral); }
-.ascii-lite .b  { color: #9E9E9E; }
-
-/* Negative donut (face 6) — donut as negative space */
-.negative-donut {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: radial-gradient(circle, transparent 30%, var(--lavender) 32%, var(--lavender) 60%, transparent 62%);
-}
+/* Color variants */
+.donut-classic    { --c: #8B4513; --f: #FFB6C1; }
+.donut-lavender   { --c: #6B4E8E; --f: #D4B8F0; }
+.donut-teal       { --c: #3D7A7A; --f: #A8E8E8; }
+.donut-coral      { --c: #A05040; --f: #FFD4C8; }
+.donut-blueberry  { --c: #3B4B8A; --f: #B0C0F0; }
+.donut-matcha     { --c: #4A7A4A; --f: #B8E8B8; }
+.donut-strawberry { --c: #903050; --f: #F0B0C8; }
 
 /* Click Me label */
 .click-me-label {
@@ -344,11 +363,5 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .charts { grid-template-columns: 1fr; }
   .header h1 { font-size: 1.5rem; }
-  .donut-face[data-index="0"]  { transform: rotateY(0deg)      translateZ(180px); }
-  .donut-face[data-index="1"]  { transform: rotateY(51.43deg)  translateZ(180px); }
-  .donut-face[data-index="2"]  { transform: rotateY(102.86deg) translateZ(180px); }
-  .donut-face[data-index="3"]  { transform: rotateY(154.29deg) translateZ(180px); }
-  .donut-face[data-index="4"]  { transform: rotateY(205.71deg) translateZ(180px); }
-  .donut-face[data-index="5"]  { transform: rotateY(257.14deg) translateZ(180px); }
-  .donut-face[data-index="6"]  { transform: rotateY(308.57deg) translateZ(180px); }
+  .donut-scene { min-height: 300px; }
 }

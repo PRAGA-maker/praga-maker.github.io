@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  // ---------- 1. 3D Donut Ring ----------
+  // ---------- 1. 2D Circular Donut Orbit ----------
   var kaomoji = ["(◕‿◕)", "(ノ◕ヮ◕)ノ*:・゚✧", "(╯°□°)╯︵ ┻━┻", "(づ｡◕‿‿◕｡)づ", "ʕ•ᴥ•ʔ", "( ˘▽˘)っ♨", "(⌐■_■)"];
 
   var scene = document.querySelector(".donut-scene");
@@ -13,14 +13,19 @@
   var clickLabel = document.querySelector(".click-me-label");
 
   if (scene && ring) {
+    var faces = ring.querySelectorAll(".donut-face");
+    var numFaces = faces.length;
     var angleY = 0;
-    var angleX = 0;
     var baseSpeed = 0.3;
     var currentSpeed = baseSpeed;
     var targetSpeed = baseSpeed;
-    var targetTiltX = 0;
-    var targetTiltY = 0;
     var isTouchDevice = "ontouchstart" in window;
+
+    // Orbit radius — responsive
+    var orbitRadius = window.innerWidth > 768 ? 200 : 120;
+    window.addEventListener("resize", function () {
+      orbitRadius = window.innerWidth > 768 ? 200 : 120;
+    });
 
     // Cursor-speed tracking
     var prevMouseX = null;
@@ -36,13 +41,6 @@
 
     function animate() {
       var now = performance.now();
-
-      if (!isTouchDevice) {
-        // Smooth tilt toward cursor
-        angleX += (targetTiltX - angleX) * 0.08;
-      } else {
-        angleX = 0;
-      }
 
       // Gaussian bell-curve click burst
       if (burstStartTime !== null) {
@@ -61,9 +59,14 @@
 
       angleY += currentSpeed;
 
-      ring.style.transform =
-        "rotateX(" + angleX + "deg) " +
-        "rotateY(" + angleY + "deg)";
+      // Position each face on a flat circular orbit
+      for (var i = 0; i < numFaces; i++) {
+        var deg = angleY + i * (360 / numFaces);
+        var rad = deg * Math.PI / 180;
+        var x = orbitRadius * Math.cos(rad);
+        var y = orbitRadius * Math.sin(rad);
+        faces[i].style.transform = "translate(" + x + "px, " + y + "px)";
+      }
 
       requestAnimationFrame(animate);
     }
@@ -83,7 +86,7 @@
 
         if (prevMouseX !== null && prevTime !== null) {
           var vx = e.clientX - prevMouseX;
-          var dt = Math.max(now - prevTime, 1); // clamp to avoid div-by-zero
+          var dt = Math.max(now - prevTime, 1);
           var velocity = Math.abs(vx) / dt;
 
           // Cumulative hysteresis: only flip direction after sustained movement
@@ -94,16 +97,11 @@
           }
 
           targetSpeed = lastDirection * baseSpeed * Math.exp(0.02 * velocity);
-          // Cap at ±15 to prevent runaway
           targetSpeed = Math.max(-15, Math.min(15, targetSpeed));
         }
 
         prevMouseX = e.clientX;
         prevTime = now;
-
-        // Tilt toward cursor
-        targetTiltX = (dy / 250) * -15;
-        targetTiltY += ((dx / 250) * 15 - targetTiltY) * 0.08;
 
         // Decay targetSpeed toward baseSpeed when mouse stops
         clearTimeout(mouseIdleTimer);
