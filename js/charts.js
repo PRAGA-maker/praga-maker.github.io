@@ -26,7 +26,7 @@ class ReciprocalScale extends Chart.Scale {
     var fMin = 1 / this.max;
     var fMax = 1 / this.min;
     var f = 1 / value;
-    var decimal = (f - fMin) / (fMax - fMin);
+    var decimal = 1 - (f - fMin) / (fMax - fMin);
     return this.getPixelForDecimal(decimal);
   }
 
@@ -34,7 +34,7 @@ class ReciprocalScale extends Chart.Scale {
     var decimal = this.getDecimalForPixel(pixel);
     var fMin = 1 / this.max;
     var fMax = 1 / this.min;
-    var f = fMin + decimal * (fMax - fMin);
+    var f = fMin + (1 - decimal) * (fMax - fMin);
     return 1 / f;
   }
 }

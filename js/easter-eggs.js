@@ -27,6 +27,8 @@
     var prevTime = null;
     var lastDirection = 1;
     var mouseIdleTimer = null;
+    var cumulativeX = 0;
+    var directionThreshold = 30;
 
     // Gaussian burst tracking
     var burstStartTime = null;
@@ -45,11 +47,11 @@
       // Gaussian bell-curve click burst
       if (burstStartTime !== null) {
         var elapsed = (now - burstStartTime) / 1000;
-        if (elapsed > 1.5) {
+        if (elapsed > 0.2) {
           burstStartTime = null;
         } else {
-          var t = (elapsed - 0.75) / 0.25;
-          var boost = 20 * Math.exp(-(t * t));
+          var t = (elapsed - 0.1) / 0.04;
+          var boost = baseSpeed * Math.exp(-(t * t));
           currentSpeed += burstDirection * boost;
         }
       }
@@ -83,13 +85,17 @@
           var vx = e.clientX - prevMouseX;
           var dt = Math.max(now - prevTime, 1); // clamp to avoid div-by-zero
           var velocity = Math.abs(vx) / dt;
-          var direction = vx !== 0 ? Math.sign(vx) : lastDirection;
 
-          targetSpeed = direction * baseSpeed * Math.exp(0.02 * velocity);
+          // Cumulative hysteresis: only flip direction after sustained movement
+          cumulativeX += vx;
+          if (Math.abs(cumulativeX) > directionThreshold) {
+            lastDirection = Math.sign(cumulativeX);
+            cumulativeX = 0;
+          }
+
+          targetSpeed = lastDirection * baseSpeed * Math.exp(0.02 * velocity);
           // Cap at ±15 to prevent runaway
           targetSpeed = Math.max(-15, Math.min(15, targetSpeed));
-
-          if (vx !== 0) lastDirection = direction;
         }
 
         prevMouseX = e.clientX;
