@@ -86,112 +86,15 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
   justify-content: center;
 }
 
-/* ===== Pixel-Art Donut (9x9 grid, CSS custom-property colors) ===== */
-.pixel-donut {
-  --u: 5px;
-  width: var(--u);
-  height: var(--u);
-  background: transparent;
+/* ===== Pixel-Art Donut Canvas ===== */
+.donut-canvas {
+  display: block;
+  width: 48px;
+  height: 48px;
   image-rendering: pixelated;
-  transform: translate(-20px, -20px);
-  box-shadow:
-    /* ring body — row 0 */
-    calc(2*var(--u)) 0               0 var(--c),
-    calc(3*var(--u)) 0               0 var(--c),
-    calc(4*var(--u)) 0               0 var(--c),
-    calc(5*var(--u)) 0               0 var(--c),
-    calc(6*var(--u)) 0               0 var(--c),
-    /* row 1 edges */
-    calc(1*var(--u)) calc(1*var(--u)) 0 var(--c),
-    calc(7*var(--u)) calc(1*var(--u)) 0 var(--c),
-    /* row 2 edges */
-    0                calc(2*var(--u)) 0 var(--c),
-    calc(8*var(--u)) calc(2*var(--u)) 0 var(--c),
-    /* row 3 edges */
-    0                calc(3*var(--u)) 0 var(--c),
-    calc(8*var(--u)) calc(3*var(--u)) 0 var(--c),
-    /* row 4 edges */
-    0                calc(4*var(--u)) 0 var(--c),
-    calc(8*var(--u)) calc(4*var(--u)) 0 var(--c),
-    /* row 5 */
-    0                calc(5*var(--u)) 0 var(--c),
-    calc(1*var(--u)) calc(5*var(--u)) 0 var(--c),
-    calc(7*var(--u)) calc(5*var(--u)) 0 var(--c),
-    calc(8*var(--u)) calc(5*var(--u)) 0 var(--c),
-    /* row 6 */
-    0                calc(6*var(--u)) 0 var(--c),
-    calc(1*var(--u)) calc(6*var(--u)) 0 var(--c),
-    calc(2*var(--u)) calc(6*var(--u)) 0 var(--c),
-    calc(6*var(--u)) calc(6*var(--u)) 0 var(--c),
-    calc(7*var(--u)) calc(6*var(--u)) 0 var(--c),
-    calc(8*var(--u)) calc(6*var(--u)) 0 var(--c),
-    /* row 7 */
-    calc(1*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(2*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(3*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(4*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(5*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(6*var(--u)) calc(7*var(--u)) 0 var(--c),
-    calc(7*var(--u)) calc(7*var(--u)) 0 var(--c),
-    /* row 8 */
-    calc(2*var(--u)) calc(8*var(--u)) 0 var(--c),
-    calc(3*var(--u)) calc(8*var(--u)) 0 var(--c),
-    calc(4*var(--u)) calc(8*var(--u)) 0 var(--c),
-    calc(5*var(--u)) calc(8*var(--u)) 0 var(--c),
-    calc(6*var(--u)) calc(8*var(--u)) 0 var(--c),
-    /* frosting — row 1 */
-    calc(2*var(--u)) calc(1*var(--u)) 0 var(--f),
-    calc(3*var(--u)) calc(1*var(--u)) 0 var(--f),
-    calc(4*var(--u)) calc(1*var(--u)) 0 var(--f),
-    calc(5*var(--u)) calc(1*var(--u)) 0 var(--f),
-    calc(6*var(--u)) calc(1*var(--u)) 0 var(--f),
-    /* frosting — row 2 */
-    calc(1*var(--u)) calc(2*var(--u)) 0 var(--f),
-    calc(2*var(--u)) calc(2*var(--u)) 0 var(--f),
-    calc(6*var(--u)) calc(2*var(--u)) 0 var(--f),
-    calc(7*var(--u)) calc(2*var(--u)) 0 var(--f),
-    /* frosting — row 3 */
-    calc(1*var(--u)) calc(3*var(--u)) 0 var(--f),
-    calc(7*var(--u)) calc(3*var(--u)) 0 var(--f),
-    /* frosting — row 4 */
-    calc(1*var(--u)) calc(4*var(--u)) 0 var(--f),
-    calc(7*var(--u)) calc(4*var(--u)) 0 var(--f),
-    /* hole — row 2 */
-    calc(3*var(--u)) calc(2*var(--u)) 0 var(--bg),
-    calc(4*var(--u)) calc(2*var(--u)) 0 var(--bg),
-    calc(5*var(--u)) calc(2*var(--u)) 0 var(--bg),
-    /* hole — row 3 */
-    calc(2*var(--u)) calc(3*var(--u)) 0 var(--bg),
-    calc(3*var(--u)) calc(3*var(--u)) 0 var(--bg),
-    calc(4*var(--u)) calc(3*var(--u)) 0 var(--bg),
-    calc(5*var(--u)) calc(3*var(--u)) 0 var(--bg),
-    calc(6*var(--u)) calc(3*var(--u)) 0 var(--bg),
-    /* hole — row 4 */
-    calc(2*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    calc(3*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    calc(4*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    calc(5*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    calc(6*var(--u)) calc(4*var(--u)) 0 var(--bg),
-    /* hole — row 5 */
-    calc(2*var(--u)) calc(5*var(--u)) 0 var(--bg),
-    calc(3*var(--u)) calc(5*var(--u)) 0 var(--bg),
-    calc(4*var(--u)) calc(5*var(--u)) 0 var(--bg),
-    calc(5*var(--u)) calc(5*var(--u)) 0 var(--bg),
-    calc(6*var(--u)) calc(5*var(--u)) 0 var(--bg),
-    /* hole — row 6 */
-    calc(3*var(--u)) calc(6*var(--u)) 0 var(--bg),
-    calc(4*var(--u)) calc(6*var(--u)) 0 var(--bg),
-    calc(5*var(--u)) calc(6*var(--u)) 0 var(--bg);
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
-
-/* Color variants */
-.donut-classic    { --c: #8B4513; --f: #FFB6C1; }
-.donut-lavender   { --c: #6B4E8E; --f: #D4B8F0; }
-.donut-teal       { --c: #3D7A7A; --f: #A8E8E8; }
-.donut-coral      { --c: #A05040; --f: #FFD4C8; }
-.donut-blueberry  { --c: #3B4B8A; --f: #B0C0F0; }
-.donut-matcha     { --c: #4A7A4A; --f: #B8E8B8; }
-.donut-strawberry { --c: #903050; --f: #F0B0C8; }
 
 /* Click Me label */
 .click-me-label {
