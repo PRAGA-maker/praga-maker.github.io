@@ -21,11 +21,19 @@
     var targetSpeed = baseSpeed;
     var isTouchDevice = "ontouchstart" in window;
 
-    // Orbit radius — responsive
-    var orbitRadius = window.innerWidth > 768 ? 200 : 120;
-    window.addEventListener("resize", function () {
-      orbitRadius = window.innerWidth > 768 ? 200 : 120;
-    });
+    // Elliptical orbit radii — responsive
+    function updateRadii() {
+      if (window.innerWidth > 768) {
+        radiusX = 320;
+        radiusY = 140;
+      } else {
+        radiusX = 160;
+        radiusY = 90;
+      }
+    }
+    var radiusX, radiusY;
+    updateRadii();
+    window.addEventListener("resize", updateRadii);
 
     // Cursor-speed tracking
     var prevMouseX = null;
@@ -59,12 +67,12 @@
 
       angleY += currentSpeed;
 
-      // Position each face on a flat circular orbit
+      // Position each face on an elliptical orbit
       for (var i = 0; i < numFaces; i++) {
         var deg = angleY + i * (360 / numFaces);
         var rad = deg * Math.PI / 180;
-        var x = orbitRadius * Math.cos(rad);
-        var y = orbitRadius * Math.sin(rad);
+        var x = radiusX * Math.cos(rad);
+        var y = radiusY * Math.sin(rad);
         faces[i].style.transform = "translate(" + x + "px, " + y + "px)";
       }
 
