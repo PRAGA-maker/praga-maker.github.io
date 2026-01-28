@@ -220,8 +220,8 @@ h1, h2, h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
   white-space: nowrap;
 }
 @keyframes floatUp {
-  0%   { opacity: 1; top: calc(50% - 45px); }
-  100% { opacity: 0; top: calc(50% - 90px); }
+  0%   { opacity: 1; top: calc(50% - 55px); }
+  100% { opacity: 0; top: calc(50% - 100px); }
 }
 
 /* ===== Cards / Chart Grid ===== */
